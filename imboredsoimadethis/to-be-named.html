@@ -24,16 +24,30 @@
       text-align: center;
       border-radius: 24px;
       transition: transform 0.3s ease;
-      height: 128px;
-      width: 45%;
+      height: 130px;
+      width: 100%;
       marign: 10px;
-      display: flex;
     }
       
     .card:hover {
       transform: translateY(-10px);
     }
+      
+    .card-wrapper {
+      box-shadow: 0 4px 8px #7d7c7c;
+      text-align: center;
+      border-radius: 24px;
+      transition: transform 0.3s ease;
+      height: 128px;
+      width: 45%;
+      marign: 10px;
+      display: flex;
+    }
 
+   .card-wrapper:hover {
+      transform: translateY(-10px);
+    }
+      
   </style>
 <body>
     <p class="title-gradient"><strong>Welcome! This is the "Gradient Page".</strong></p>
@@ -41,7 +55,7 @@
 
 
 
-<div class="card" style="background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); "></div>      <div class="card" style="background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); "></div>
+<div class="card-wrapper"> <div class="card" style="background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); "></div>      <div class="card" style="background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); "></div> </div>
 
 
 
