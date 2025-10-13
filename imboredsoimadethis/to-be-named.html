@@ -57,10 +57,25 @@
 
 
 
-<div class="card-wrapper"> <div class="card" style="background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); "></div>      <div class="card" style="background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); "></div> </div>
+<div class="card-wrapper"> <span><div class="card" style="background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); "></div></span>      <div class="card" style="background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%); "></div> </div>
 
+<script>
+    const span = document.querySelector("span");
 
+span.onclick = function() {
+  document.execCommand("copy");
+}
 
+span.addEventListener("copy", function(event) {
+  event.preventDefault();
+  if (event.clipboardData) {
+    event.clipboardData.setData("text/plain", span.textContent);
+    console.log(event.clipboardData.getData("text"))
+  }
+});
+</script>
+
+    
 
 
 
