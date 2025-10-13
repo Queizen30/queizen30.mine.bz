@@ -1,1 +1,29 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Open Link Website</title>
+  <style>
+    body { font-family: sans-serif; max-width: 400px; margin: 40px auto; }
+    input, button { font-size: 1rem; padding: 8px; margin-bottom: 16px; width: 100%; box-sizing: border-box; }
+    button { width: auto; }
+  </style>
+</head>
+<body>
+  <h2>Open a Link</h2>
+  <input type="text" id="linkInput" placeholder="Enter a URL" />
+  <button onclick="openLink()">Open Link</button>
+  <script>
+    function openLink() {
+      var link = document.getElementById('linkInput').value.trim();
+      if (!link) return;
+      // Add https:// if missing
+      if (!/^https?:\/\//i.test(link)) {
+        link = 'https://' + link;
+      }
+      window.open(link, '_blank');
+    }
+  </script>
+</body>
+</html>
