@@ -11,19 +11,24 @@
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       font-size: 48px;
     }
+      
     .title-gradient {
       font-size: 72px;
       background: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 47%, rgba(237, 221, 83, 1) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+      
     .card {
       box-shadow: 0 4px 8px #7d7c7c;
-      margin: 20px;
-      padding: 20px;
       text-align: center;
       border-radius: 24px;
       transition: transform 0.3s ease;
+      height: 30px;
+    }
+      
+    .card:hover {
+      transform: translateY(-10px);
     }
 
   </style>
