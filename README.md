@@ -7,5 +7,5 @@ My own little website!
 
 #### What is that?
 
-A folder full of boring HTMLS, some of them made with AI, some of them by me.
+A folder full of boring HTMLs, some of them made with AI, some of them by me.
 And, you guessed it, I made them because i was bored.
