@@ -1,279 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeonAI Chat</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Source+Code+Pro:wght@400;600&display=swap');
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NeonAI — Chat</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#111126; --bg2:#0f1724;
+  --surface: rgba(255,255,255,0.04);
+  --accent:#6366f1; --accent-2:#818cf8;
+  --text:#e6eef8; --muted:#9aa4b2;
+  --card:#0b1220; --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--text)}
+body{
+  background: radial-gradient(circle at 10% 10%, rgba(99,102,241,0.12), transparent 10%), linear-gradient(180deg,var(--bg1),var(--bg2));
+  display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+header{
+  display:flex;align-items:center;justify-content:space-between;padding:18px 24px;
+  background:linear-gradient(90deg, rgba(99,102,241,0.08), rgba(24,24,36,0.06));
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  backdrop-filter: blur(8px);
+}
+.logo{display:flex;gap:12px;align-items:center}
+.logo .mark{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(99,102,241,0.16)}
+.logo .title{font-weight:600;font-size:1.05rem}
+.header-right{color:var(--muted);font-size:0.9rem}
 
-    :root {
-      --bg: #0f111a;
-      --surface: rgba(255, 255, 255, 0.04);
-      --accent: #4f46e5;
-      --accent-light: #818cf8;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --border: rgba(255, 255, 255, 0.1);
-      --radius: 12px;
-    }
+.container{display:flex;flex:1;gap:20px;padding:24px;align-items:stretch}
+.panel{flex:1;display:flex;flex-direction:column;min-height:0;border-radius:var(--radius);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow: 0 6px 30px rgba(2,6,23,0.6);}
+.chat-area{flex:1;overflow:auto;padding:8px 6px;display:flex;flex-direction:column;gap:12px}
+.message{max-width:78%;padding:12px 14px;border-radius:12px;line-height:1.45;font-size:0.96rem;word-break:break-word}
+.user{align-self:flex-end;background:linear-gradient(180deg,var(--accent),var(--accent-2));color:white;border:1px solid rgba(255,255,255,0.04)}
+.bot{align-self:flex-start;background:var(--card);border:1px solid rgba(255,255,255,0.03);color:var(--text)}
+.input-row{display:flex;gap:12px;padding-top:12px;align-items:center}
+.input{
+  flex:1;background:transparent;border:1px solid rgba(255,255,255,0.04);padding:12px 14px;border-radius:12px;color:var(--text);
+  outline:none;font-size:1rem;
+}
+.send-btn{
+  background:linear-gradient(180deg,var(--accent),var(--accent-2));border:none;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;cursor:pointer;
+  box-shadow:0 10px 25px rgba(99,102,241,0.12);
+}
+.send-btn:active{transform:translateY(1px)}
 
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: radial-gradient(circle at top right, #1e1b4b, #0f111a 60%);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
+pre.code{
+  position:relative;background:#071124;border-radius:10px;padding:14px;font-family:Source Code Pro,monospace;color:#e6eef8;overflow:auto;margin:8px 0;border:1px solid rgba(255,255,255,0.03);
+}
+.copy-btn{
+  position:absolute;right:10px;top:10px;background:rgba(255,255,255,0.06);border:none;color:var(--text);padding:6px 8px;border-radius:8px;cursor:pointer;font-size:0.85rem;
+}
+.ai-image{max-width:90%;border-radius:12px;border:1px solid rgba(255,255,255,0.04);display:block;margin-top:8px}
 
-    header, footer {
-      padding: 1em 2em;
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
+/* tokens */
+.token.keyword{color:#7dd3fc}
+.token.string{color:#86efac}
+.token.number{color:#fef08a}
+.token.comment{color:#94a3b8;font-style:italic}
+.token.function{color:#fda4af}
+.token.boolean{color:#fcd34d}
+.token.operator{color:#fca5a5}
+.token.punctuation{color:#93c5fd}
 
-    header {
-      background: linear-gradient(90deg, #312e81, #1e1b4b);
-      color: #fff;
-      font-weight: 600;
-      font-size: 1.2em;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 0.85em;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
-
-    .logo {
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .chat-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 2em;
-      display: flex;
-      flex-direction: column;
-      gap: 1em;
-      scroll-behavior: smooth;
-    }
-
-    .message {
-      padding: 1em 1.2em;
-      border-radius: var(--radius);
-      max-width: 75%;
-      word-wrap: break-word;
-      line-height: 1.5;
-      font-size: 0.95em;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .user {
-      align-self: flex-end;
-      background: var(--accent);
-      color: white;
-    }
-
-    .bot {
-      align-self: flex-start;
-      background: var(--surface);
-      border: 1px solid var(--border);
-    }
-
-    .input-area {
-      display: flex;
-      border-top: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(12px);
-      padding: 0.8em 1.2em;
-    }
-
-    input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-size: 1em;
-      padding: 0.5em;
-    }
-
-    button {
-      background: var(--accent);
-      border: none;
-      color: white;
-      font-weight: 600;
-      border-radius: var(--radius);
-      padding: 0.6em 1.4em;
-      cursor: pointer;
-      transition: 0.25s;
-    }
-
-    button:hover {
-      background: var(--accent-light);
-    }
-
-    pre {
-      position: relative;
-      background: #1e293b;
-      border-radius: var(--radius);
-      padding: 1em;
-      overflow-x: auto;
-      font-family: 'Source Code Pro', monospace;
-      font-size: 0.9em;
-      color: #f8fafc;
-      margin-top: 0.8em;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      font-size: 0.75em;
-      padding: 0.3em 0.7em;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .ai-image {
-      max-width: 80%;
-      border-radius: var(--radius);
-      margin-top: 0.8em;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Improved syntax highlighting */
-    .token.keyword { color: #60a5fa; }
-    .token.string { color: #a7f3d0; }
-    .token.number { color: #facc15; }
-    .token.comment { color: #6b7280; font-style: italic; }
-    .token.function { color: #f472b6; }
-    .token.operator { color: #f87171; }
-    .token.boolean { color: #fbbf24; }
-    .token.punctuation { color: #9ca3af; }
-
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-thumb { background: #4f46e5aa; border-radius: 4px; }
-  </style>
+/* scrollbar */
+.chat-area::-webkit-scrollbar{height:10px;width:10px}
+.chat-area::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#6366f1,#818cf8);border-radius:8px}
+.footer{padding:12px 24px;text-align:center;color:var(--muted);font-size:0.9rem;border-top:1px solid rgba(255,255,255,0.02)}
+@media(max-width:880px){.container{padding:12px;flex-direction:column}}
+</style>
 </head>
 <body>
-<header><div class="logo">NeonAI</div></header>
-<div class="chat-container" id="chat"></div>
-<div class="input-area">
-  <input id="userInput" type="text" placeholder="Type your message..." />
-  <button onclick="sendMessage()">Send</button>
+<header>
+  <div class="logo">
+    <div class="mark" aria-hidden="true"></div>
+    <div>
+      <div class="title">NeonAI</div>
+      <div style="font-size:12px;color:var(--muted)">Futuristic assistant</div>
+    </div>
+  </div>
+  <div class="header-right">No API key · Pollinations</div>
+</header>
+
+<div class="container">
+  <div class="panel">
+    <div class="chat-area" id="chat"></div>
+
+    <div class="input-row">
+      <input id="userInput" class="input" placeholder="Ask something or request an image..." />
+      <button class="send-btn" id="sendBtn">Send</button>
+    </div>
+  </div>
 </div>
-<footer>Powered by Pollinations.ai — No API key required</footer>
+
+<div class="footer">Powered by Pollinations.ai — no key required. Use responsibly.</div>
 
 <script>
-const chat=document.getElementById('chat');
-const input=document.getElementById('userInput');
-const history=[];
+/* Minimal, corrected JS. */
+const chat = document.getElementById('chat');
+const input = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+const history = [];
 
-input.addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage();});
+input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+sendBtn.addEventListener('click', sendMessage);
 
-async function sendMessage(){
-  const text=input.value.trim();
-  if(!text)return;
-  addMessage(text,'user');
-  history.push({role:'user',content:text});
-  input.value='';
-  const isImage=await checkIfImagePrompt(text);
-  if(isImage==='Y'){
-    const imgUrl=`https://image.pollinations.ai/prompt/${encodeURIComponent(text)}`;
-    addImage(imgUrl);
-    history.push({role:'bot',content:'[Image generated]'});
-  }else{
-    const reply=await getAIResponse();
-    addMessage(reply||"Connection error.",'bot');
-    history.push({role:'bot',content:reply});
+function appendMessage(text, cls) {
+  const el = document.createElement('div');
+  el.className = 'message ' + cls;
+  el.innerHTML = text;
+  chat.appendChild(el);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* escape for plain text messages */
+function escHTML(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* highlight code with extended token rules */
+function highlight(code){
+  let out = escHTML(code);
+  out = out
+    .replace(/(\/\/.*?$|\/\*[\s\S]*?\*\/|#.*?$)/mg, '<span class="token comment">$1</span>')
+    .replace(/("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|`([^`\\]|\\.)*`)/g, '<span class="token string">$1</span>')
+    .replace(/\b(true|false|null|undefined)\b/g, '<span class="token boolean">$1</span>')
+    .replace(/\b(function|return|let|const|var|if|else|for|while|async|await|class|import|from|try|catch|finally|switch|case|break|continue|new|in|of)\b/g, '<span class="token keyword">$1</span>')
+    .replace(/\b([0-9]+(\.[0-9]+)?)\b/g, '<span class="token number">$1</span>')
+    .replace(/\b([a-zA-Z_]\w*)\s*(?=\()/g, '<span class="token function">$1</span>')
+    .replace(/([=+\-*/<>!%]+)/g, '<span class="token operator">$1</span>')
+    .replace(/([{}()[\];,.])/g, '<span class="token punctuation">$1</span>');
+  return out;
+}
+
+/* create a code block element that displays code (not escaped HTML) */
+function makeCodeBlock(code){
+  const pre = document.createElement('pre');
+  pre.className = 'code';
+  const codeElem = document.createElement('code');
+  codeElem.innerHTML = highlight(code);
+  pre.appendChild(codeElem);
+
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'Copy';
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(code).then(()=>{
+      btn.textContent = 'Copied';
+      setTimeout(()=>btn.textContent='Copy',1000);
+    }).catch(()=>{ btn.textContent='Err'; setTimeout(()=>btn.textContent='Copy',1000); });
+  });
+  pre.appendChild(btn);
+  return pre;
+}
+
+/* render bot or user content. If code blocks exist, render them properly. */
+function renderMessageRaw(text, cls){
+  // split into segments: before code, code, after code (supports one code block; can extend)
+  const codeRegex = /```([\s\S]*?)```/;
+  const match = text.match(codeRegex);
+  if(!match){
+    appendMessage(escHTML(text), cls);
+    return;
+  }
+  // before
+  const before = text.slice(0, match.index).trim();
+  if(before) appendMessage(escHTML(before), cls);
+  // code block
+  const code = match[1].replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'message ' + cls;
+  wrapper.appendChild(makeCodeBlock(code));
+  chat.appendChild(wrapper);
+  chat.scrollTop = chat.scrollHeight;
+  // after (if any)
+  const after = text.slice(match.index + match[0].length).trim();
+  if(after) appendMessage(escHTML(after), cls);
+}
+
+/* ask Pollinations text endpoint for Y/N if image */
+async function checkIfImagePrompt(text){
+  try{
+    const q = `Is the following user message a prompt to generate an image? Answer with Y or N only.\n\nMessage: "${text}"`;
+    const res = await fetch('https://text.pollinations.ai/' + encodeURIComponent(q));
+    if(!res.ok) throw new Error('status '+res.status);
+    const txt = (await res.text()).trim().toUpperCase();
+    return txt.startsWith('Y') ? 'Y' : 'N';
+  }catch(e){
+    console.error('checkIfImagePrompt', e);
+    return 'N';
   }
 }
 
-function addMessage(text,sender){
-  const msg=document.createElement('div');
-  msg.className='message '+sender;
-  const codeMatch=text.match(/```([\\s\\S]*?)```/);
-  if(codeMatch){
-    const before=text.split(/```[\\s\\S]*?```/)[0];
-    const code=codeMatch[1];
-    if(before.trim()){
-      const preText=document.createElement('div');
-      preText.textContent=before.trim();
-      msg.appendChild(preText);
+/* ask Pollinations for normal reply using history */
+async function getAIReply(){
+  try{
+    const prompt = history.map(m => `${m.role==='user' ? 'Human' : 'AI'}: ${m.content}`).join('\n') + '\nAI:';
+    const res = await fetch('https://text.pollinations.ai/' + encodeURIComponent(prompt));
+    if(!res.ok) throw new Error('status '+res.status);
+    const txt = await res.text();
+    return txt;
+  }catch(e){
+    console.error('getAIReply', e);
+    return null;
+  }
+}
+
+/* main send flow */
+async function sendMessage(){
+  const text = input.value.trim();
+  if(!text) return;
+  // show user
+  appendMessage(escHTML(text), 'user');
+  history.push({role:'user',content:text});
+  input.value = '';
+  // ask if image
+  const isImage = await checkIfImagePrompt(text);
+  if(isImage==='Y'){
+    // show thumbnail while loading
+    appendMessage('Generating image...', 'bot');
+    try{
+      const url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(text);
+      // create image element, letting browser fetch it
+      const img = document.createElement('img');
+      img.className = 'ai-image';
+      img.alt = 'AI generated';
+      img.src = url;
+      // replace last bot message with image
+      const last = chat.querySelector('.message.bot:last-of-type');
+      if(last) last.remove();
+      const wrapper = document.createElement('div'); wrapper.className='message bot';
+      wrapper.appendChild(img);
+      chat.appendChild(wrapper);
+      chat.scrollTop = chat.scrollHeight;
+      history.push({role:'bot',content:'[Image generated]'});
+    }catch(e){
+      console.error(e);
+      appendMessage('Failed to generate image.', 'bot');
+      history.push({role:'bot',content:'[Image failed]'});
     }
-    const pre=document.createElement('pre');
-    pre.innerHTML=highlightCode(escapeHTML(code));
-    const btn=document.createElement('button');
-    btn.textContent='Copy';
-    btn.className='copy-btn';
-    btn.onclick=()=>navigator.clipboard.writeText(code);
-    pre.appendChild(btn);
-    msg.appendChild(pre);
-  }else msg.textContent=text;
-  chat.appendChild(msg);
-  chat.scrollTop=chat.scrollHeight;
-}
+    return;
+  }
+  // otherwise get text reply
+  appendMessage('...', 'bot');
+  const reply = await getAIReply();
+  // remove the '...' bot placeholder
+  const placeholders = Array.from(chat.querySelectorAll('.message.bot')).filter(el => el.textContent.trim()==='...');
+  if(placeholders.length) placeholders[placeholders.length-1].remove();
 
-function addImage(url){
-  const msg=document.createElement('div');
-  msg.className='message bot';
-  const img=document.createElement('img');
-  img.src=url;
-  img.alt='AI generated image';
-  img.className='ai-image';
-  msg.appendChild(img);
-  chat.appendChild(msg);
-  chat.scrollTop=chat.scrollHeight;
-}
-
-function escapeHTML(str){
-  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-function highlightCode(code){
-  return code
-    .replace(/(\\/\\/.*)/g,'<span class="token comment">$1</span>')
-    .replace(/("[^"]*"|'[^']*')/g,'<span class="token string">$1</span>')
-    .replace(/\\b(function|return|let|const|var|if|else|for|while|async|await|class|import|export|new|try|catch|throw|break|continue)\\b/g,'<span class="token keyword">$1</span>')
-    .replace(/\\b(true|false|null|undefined)\\b/g,'<span class="token boolean">$1</span>')
-    .replace(/\\b([0-9]+)\\b/g,'<span class="token number">$1</span>')
-    .replace(/\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()/g,'<span class="token function">$1</span>')
-    .replace(/([=+\\-*\\/<>!]+)/g,'<span class="token operator">$1</span>')
-    .replace(/([{}()[\\];,.])/g,'<span class="token punctuation">$1</span>');
-}
-
-async function getAIResponse(){
-  try{
-    const prompt=history.map(m=>`${m.role==='user'?'Human':'AI'}: ${m.content}`).join('\\n')+'\\nAI:';
-    const res=await fetch("https://text.pollinations.ai/"+encodeURIComponent(prompt));
-    if(!res.ok)throw new Error(res.status);
-    const text=await res.text();
-    return text.trim();
-  }catch(e){console.error(e);return null;}
-}
-
-async function checkIfImagePrompt(text){
-  try{
-    const question=`Is the following user message a prompt to generate an image? Respond only with Y or N.\\n\\nMessage: "${text}"`;
-    const res=await fetch("https://text.pollinations.ai/"+encodeURIComponent(question));
-    if(!res.ok)throw new Error(res.status);
-    const answer=(await res.text()).trim().toUpperCase();
-    return answer.startsWith('Y')?'Y':'N';
-  }catch(e){console.error(e);return'N';}
+  if(!reply){
+    appendMessage('Connection error.', 'bot');
+    history.push({role:'bot',content:'Connection error.'});
+    return;
+  }
+  // render reply with code support
+  renderMessageRaw(reply, 'bot');
+  history.push({role:'bot',content:reply});
 }
 </script>
 </body>
