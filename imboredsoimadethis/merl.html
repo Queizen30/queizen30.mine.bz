@@ -5,175 +5,127 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NeonAI Chat</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #0a0a0a, #000);
-      font-family: 'Orbitron', sans-serif;
-      color: #0ff;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    header, footer {
-      text-align: center;
-      padding: 1em;
-      background: rgba(0, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid #0ff;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.6em;
-      color: #00ffff;
-    }
-
-    footer {
-      border-top: 1px solid #0ff;
-      border-bottom: none;
-      font-size: 0.9em;
-      opacity: 0.7;
-    }
-
-    .chat-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1em;
-      display: flex;
-      flex-direction: column;
-      gap: 1em;
-      scroll-behavior: smooth;
-    }
-
-    .message {
-      padding: 0.8em 1em;
-      border-radius: 12px;
-      max-width: 75%;
-      word-wrap: break-word;
-      line-height: 1.4;
-      font-size: 0.95em;
-    }
-
-    .user {
-      align-self: flex-end;
-      background: #00ffff33;
-      border: 1px solid #00ffff;
-      color: #fff;
-    }
-
-    .bot {
-      align-self: flex-start;
-      background: #001111;
-      border: 1px solid #00cccc;
-      color: #0ff;
-    }
-
-    .input-area {
-      display: flex;
-      border-top: 1px solid #0ff;
-      padding: 0.5em;
-      background: rgba(0, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-    }
-
-    input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #0ff;
-      font-size: 1em;
-      padding: 0.5em;
-    }
-
-    button {
-      background: #0ff;
-      color: #000;
-      border: none;
-      font-weight: bold;
-      padding: 0.5em 1em;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #00cccc;
-    }
-
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #00ffff55;
-      border-radius: 4px;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Source+Code+Pro:wght@400;600&display=swap');
+    body{margin:0;background:radial-gradient(circle at top,#0a0a0a,#000);font-family:'Orbitron',sans-serif;color:#0ff;display:flex;flex-direction:column;height:100vh}
+    header,footer{text-align:center;padding:1em;background:rgba(0,255,255,0.1);backdrop-filter:blur(10px)}
+    header{border-bottom:1px solid #0ff}footer{border-top:1px solid #0ff;font-size:.9em;opacity:.7}
+    .chat-container{flex:1;overflow-y:auto;padding:1em;display:flex;flex-direction:column;gap:1em;scroll-behavior:smooth}
+    .message{padding:.8em 1em;border-radius:12px;max-width:75%;word-wrap:break-word;line-height:1.4;font-size:.95em}
+    .user{align-self:flex-end;background:#00ffff33;border:1px solid #00ffff;color:#fff}
+    .bot{align-self:flex-start;background:#001111;border:1px solid #00cccc;color:#0ff}
+    .input-area{display:flex;border-top:1px solid #0ff;padding:.5em;background:rgba(0,255,255,0.05);backdrop-filter:blur(10px)}
+    input{flex:1;background:transparent;border:none;outline:none;color:#0ff;font-size:1em;padding:.5em}
+    button{background:#0ff;color:#000;border:none;font-weight:bold;padding:.5em 1em;cursor:pointer;transition:.2s}
+    button:hover{background:#00cccc}
+    ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#00ffff55;border-radius:4px}
+    pre{position:relative;background:#0a0f12;border:1px solid #00cccc;border-radius:8px;padding:1em;overflow-x:auto;font-family:'Source Code Pro',monospace;font-size:.9em;color:#e0e0e0}
+    .copy-btn{position:absolute;top:6px;right:6px;background:#00cccc;border:none;color:#000;font-size:.8em;padding:.3em .6em;border-radius:4px;cursor:pointer}
+    .token.keyword{color:#00ffff}.token.string{color:#98ff98}.token.number{color:#ffcc00}.token.comment{color:#888;font-style:italic}.token.function{color:#ff80bf}
+    .ai-image{max-width:80%;border:1px solid #00cccc;border-radius:8px;margin-top:.5em}
   </style>
 </head>
 <body>
-  <header>
-    <h1>🤖 NeonAI Chat</h1>
-  </header>
+<header><h1>🤖 NeonAI Chat</h1></header>
 
-  <div class="chat-container" id="chat"></div>
+<div class="chat-container" id="chat"></div>
 
-  <div class="input-area">
-    <input id="userInput" type="text" placeholder="Type your message..." />
-    <button onclick="sendMessage()">Send</button>
-  </div>
+<div class="input-area">
+  <input id="userInput" type="text" placeholder="Type your message..." />
+  <button onclick="sendMessage()">Send</button>
+</div>
 
-  <footer>
-    <p>Powered by Pollinations.ai — No API key needed</p>
-  </footer>
+<footer><p>Powered by Pollinations.ai — No API key needed</p></footer>
 
-  <script>
-    const chat = document.getElementById('chat');
-    const input = document.getElementById('userInput');
-    const history = [];
+<script>
+const chat=document.getElementById('chat');
+const input=document.getElementById('userInput');
+const history=[];
 
-    async function sendMessage() {
-      const text = input.value.trim();
-      if (!text) return;
-      addMessage(text, 'user');
-      history.push({ role: 'user', content: text });
-      input.value = '';
-      const reply = await getAIResponse();
-      addMessage(reply || "Connection error.", 'bot');
-      history.push({ role: 'bot', content: reply });
+input.addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage();});
+
+async function sendMessage(){
+  const text=input.value.trim();
+  if(!text)return;
+  addMessage(text,'user');
+  history.push({role:'user',content:text});
+  input.value='';
+  const isImage=await checkIfImagePrompt(text);
+  if(isImage==='Y'){
+    const imgUrl=`https://image.pollinations.ai/prompt/${encodeURIComponent(text)}`;
+    addImage(imgUrl);
+    history.push({role:'bot',content:'[Image generated]'});
+  }else{
+    const reply=await getAIResponse();
+    addMessage(reply||"Connection error.",'bot');
+    history.push({role:'bot',content:reply});
+  }
+}
+
+function addMessage(text,sender){
+  const msg=document.createElement('div');
+  msg.className='message '+sender;
+  const codeMatch=text.match(/```([\s\S]*?)```/);
+  if(codeMatch){
+    const before=text.split(/```[\s\S]*?```/)[0];
+    const code=codeMatch[1];
+    if(before.trim()){
+      const preText=document.createElement('div');
+      preText.textContent=before.trim();
+      msg.appendChild(preText);
     }
+    const pre=document.createElement('pre');
+    pre.innerHTML=highlightCode(code);
+    const btn=document.createElement('button');
+    btn.textContent='Copy';
+    btn.className='copy-btn';
+    btn.onclick=()=>navigator.clipboard.writeText(code);
+    pre.appendChild(btn);
+    msg.appendChild(pre);
+  }else msg.textContent=text;
+  chat.appendChild(msg);
+  chat.scrollTop=chat.scrollHeight;
+}
 
-    function addMessage(text, sender) {
-      const msg = document.createElement('div');
-      msg.className = 'message ' + sender;
-      msg.textContent = text;
-      chat.appendChild(msg);
-      chat.scrollTop = chat.scrollHeight;
-    }
+function addImage(url){
+  const msg=document.createElement('div');
+  msg.className='message bot';
+  const img=document.createElement('img');
+  img.src=url;
+  img.alt='AI generated image';
+  img.className='ai-image';
+  msg.appendChild(img);
+  chat.appendChild(msg);
+  chat.scrollTop=chat.scrollHeight;
+}
 
-    async function getAIResponse() {
-      try {
-        // Combine conversation into one contextual prompt
-        const prompt = history
-          .map(m => `${m.role === 'user' ? 'Human' : 'AI'}: ${m.content}`)
-          .join('\n') + '\nAI:';
-        
-        const url = "https://text.pollinations.ai/" + encodeURIComponent(prompt);
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(res.status);
-        const text = await res.text();
-        return text.trim();
-      } catch (err) {
-        console.error(err);
-        return null;
-      }
-    }
+function highlightCode(code){
+  return code
+  .replace(/(\/\/.*)/g,'<span class="token comment">$1</span>')
+  .replace(/("[^"]*"|\'[^\']*\')/g,'<span class="token string">$1</span>')
+  .replace(/\b(function|return|let|const|var|if|else|for|while|async|await|class|import|export|new|try|catch|throw)\b/g,'<span class="token keyword">$1</span>')
+  .replace(/\b([0-9]+)\b/g,'<span class="token number">$1</span>')
+  .replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\s*(?=\()/g,'<span class="token function">$1</span>');
+}
 
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') sendMessage();
-    });
-  </script>
+async function getAIResponse(){
+  try{
+    const prompt=history.map(m=>`${m.role==='user'?'Human':'AI'}: ${m.content}`).join('\n')+'\nAI:';
+    const res=await fetch("https://text.pollinations.ai/"+encodeURIComponent(prompt));
+    if(!res.ok)throw new Error(res.status);
+    const text=await res.text();
+    return text.trim();
+  }catch(e){console.error(e);return null;}
+}
+
+async function checkIfImagePrompt(text){
+  try{
+    const question=`Is the following user message a prompt to generate an image? Respond only with Y or N.\n\nMessage: "${text}"`;
+    const res=await fetch("https://text.pollinations.ai/"+encodeURIComponent(question));
+    if(!res.ok)throw new Error(res.status);
+    const answer=(await res.text()).trim().toUpperCase();
+    return answer.startsWith('Y')?'Y':'N';
+  }catch(e){console.error(e);return'N';}
+}
+</script>
 </body>
 </html>
