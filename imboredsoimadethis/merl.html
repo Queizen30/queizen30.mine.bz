@@ -111,7 +111,6 @@
       background: #00ffff55;
       border-radius: 4px;
     }
-
   </style>
 </head>
 <body>
@@ -133,14 +132,17 @@
   <script>
     const chat = document.getElementById('chat');
     const input = document.getElementById('userInput');
+    const history = [];
 
     async function sendMessage() {
       const text = input.value.trim();
       if (!text) return;
       addMessage(text, 'user');
+      history.push({ role: 'user', content: text });
       input.value = '';
-      const reply = await getAIResponse(text);
+      const reply = await getAIResponse();
       addMessage(reply || "Connection error.", 'bot');
+      history.push({ role: 'bot', content: reply });
     }
 
     function addMessage(text, sender) {
@@ -151,8 +153,13 @@
       chat.scrollTop = chat.scrollHeight;
     }
 
-    async function getAIResponse(prompt) {
+    async function getAIResponse() {
       try {
+        // Combine conversation into one contextual prompt
+        const prompt = history
+          .map(m => `${m.role === 'user' ? 'Human' : 'AI'}: ${m.content}`)
+          .join('\n') + '\nAI:';
+        
         const url = "https://text.pollinations.ai/" + encodeURIComponent(prompt);
         const res = await fetch(url);
         if (!res.ok) throw new Error(res.status);
