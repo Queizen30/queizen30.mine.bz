@@ -1,4 +1,4 @@
-# [queizen30.github.io](https://queizen30.github.io)
+# [queizen30.mine.bz](https://queizen30.mine.bz)
 
 My own little website!
 
@@ -10,5 +10,5 @@ My own little website!
 A folder full of boring HTMLs, some of them made with AI, some of them by me.
 And, you guessed it, I made them because i was bored.
 
-Find more information [here](https://queizen30.github.io/imboredsoimadethis). 
+Find more information [here](https://queizen30.mine.bz/imboredsoimadethis). 
 (Link NOT working right now)
