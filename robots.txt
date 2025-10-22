@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: 
+Sitemap: http://queizen30.mine.bz/sitemap.xml
