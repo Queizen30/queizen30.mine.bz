@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This website is outdated see https://lumt.qu30.qzz.io.
+
 # [queizen30.mine.bz](https://queizen30.mine.bz)
 
 My own little website!
